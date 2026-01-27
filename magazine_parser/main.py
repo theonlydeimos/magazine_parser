@@ -8,10 +8,10 @@ start_time = time.time()
 
 def check_inputs(isOK=False):
     if not isOK:
-        if year not in range(1934, 1967+1):
+        if year not in range(1934, 1967 + 1):
             print("Неправильный год")
             return False
-        if month not in range(1, 12+1):
+        if month not in range(1, 12 + 1):
             print("Неправильный месяц")
             return False
         return True
@@ -98,7 +98,6 @@ if __name__ == "__main__":
 
     else:
         print("Wrong input")
-
 
 end_time = time.time()
 total_time = end_time - start_time

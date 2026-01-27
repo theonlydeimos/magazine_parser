@@ -1,3 +1,6 @@
+# Неиспользуемый функционал. Использовался для объединения нескольких PDF файлов в один.
+
+
 import os, pymupdf
 from time import perf_counter
 
@@ -23,7 +26,7 @@ def sort_dates(dates):
             day_str = item.split()[0]
             day_int = int(day_str)
             days.append((day_int, item))
-        except ValueError:  # occurs if encountering non integer values
+        except ValueError:
             continue
 
     return [item[1] for item in sorted(days)]
@@ -36,7 +39,6 @@ def merge_PDFs(path, year, month):
     for pdf in sort_dates(PDFs_to_merge):
         pdf_path = os.path.join(path, pdf)
         page_count = len(pymupdf.open(pdf_path))
-        # Append all pages of the current PDF to the new document
         output_PDF.insert_pdf(pymupdf.open(pdf_path), from_page=0, to_page=page_count - 1)
 
     output_PDF.save(f"{os.path.join(path, f'{year}-{month}-all')}.pdf")
@@ -77,24 +79,23 @@ for year in years:
             dates_path = os.path.join(months_path, str(month))
 
             for date in sort_dates(os.listdir(dates_path)):
-                doc_PDF = pymupdf.open()  # output PDF
-                sheets_path = os.path.join(dates_path, date)  # where my files are
-                sheets_list = os.listdir(sheets_path)  # list of them
+                doc_PDF = pymupdf.open()
+                sheets_path = os.path.join(dates_path, date)
+                sheets_list = os.listdir(sheets_path)
 
                 if sheets_list:
 
                     for i, f in enumerate(sorted(sheets_list)):
                         if f != '.DS_Store':
-                            img = pymupdf.open(os.path.join(sheets_path, f))  # open pic as document
-                            rect = img[0].rect  # pic dimension
-                            pdfbytes = img.convert_to_pdf()  # make a PDF stream
+                            img = pymupdf.open(os.path.join(sheets_path, f))
+                            rect = img[0].rect
+                            pdfbytes = img.convert_to_pdf()
                             img.close()
-                            imgPDF = pymupdf.open("pdf", pdfbytes)  # open stream as PDF
-                            page = doc_PDF.new_page(width=rect.width,
-                                                    height=rect.height)  # new page with ... pic dimension
-                            page.show_pdf_page(rect, imgPDF, 0)  # image fills the page
+                            imgPDF = pymupdf.open("pdf", pdfbytes)
+                            page = doc_PDF.new_page(width=rect.width, height=rect.height)
+                            page.show_pdf_page(rect, imgPDF, 0)
 
-                    output_path = os.path.join(output_month_path, date)  # ! does not include .pdf
+                    output_path = os.path.join(output_month_path, date)
 
                     doc_PDF.save(f"{output_path}.pdf")
 
